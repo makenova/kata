@@ -7,51 +7,52 @@ import test from 'ava'
 
 class MyStructure {
   constructor(array) {
-    this.list = array || []
+    this.set = Array.isArray(array) ? new Set(array) : new Set()
   }
 
   insert(number) {
-    this.list.push(number)
+    this.set.add(number)
   }
 
   remove(number) {
-    this.list = this.list.filter((element) => number !== element)
+    this.set.delete(number)
   }
 
   getRandomElement() {
-    const random = Math.floor(Math.random() * (this.list.length))
-    return this.list[random]
+    const random = Math.floor(Math.random() * (this.set.size))
+    const randomValue = Array.from(this.set)[random]
+    return randomValue
   }
 }
 
 test('create an empty MyStructure', t => {
   const structure = new MyStructure()
-  t.deepEqual(structure.list, [])
+  t.deepEqual(Array.from(structure.set), [])
 })
 
 test('create a populated MyStructure', t => {
   const testArray = [1, 2, 3]
   const structure = new MyStructure(testArray.slice())
-  t.deepEqual(structure.list, testArray)
+  t.deepEqual(Array.from(structure.set), testArray)
 })
 
 test('insert an element', t => {
   const testArray = [1, 2, 3]
   const structure = new MyStructure(testArray.slice())
   structure.insert(4)
-  t.deepEqual(structure.list, testArray.concat([4]))
+  t.deepEqual(Array.from(structure.set), testArray.concat([4]))
 })
 
 test('remove an element', t => {
-  const testArray = [1, 3, 2, 3]
+  const testArray = [1, 2, 3]
   const structure = new MyStructure(testArray.slice())
   structure.remove(3)
-  t.deepEqual(structure.list, [1, 2])
+  t.deepEqual(Array.from(structure.set), [1, 2])
 })
 
 test('get a random element', t => {
   const testArray = [88, 76, 10]
   const structure = new MyStructure(testArray.slice())
   const randomValue = structure.getRandomElement()
-  t.true(structure.list.includes(randomValue))
+  t.true(structure.set.has(randomValue))
 })
